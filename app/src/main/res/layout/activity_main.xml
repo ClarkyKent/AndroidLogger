@@ -45,39 +45,48 @@
     </LinearLayout>
 
 
-    <Button android:layout_width="wrap_content"
-        android:layout_margin="15dp"
-        android:id="@+id/Break"
-        android:layout_gravity="center"
-        android:layout_height="wrap_content"
-        android:onClick="sendMessageBrake"
-        android:enabled="false"
-        android:text="Break"/>
-
-    <Button android:layout_width="wrap_content"
-        android:layout_margin="15dp"
-        android:id="@+id/Acceleration"
-        android:layout_gravity="center"
-        android:layout_height="wrap_content"
-        android:onClick="sendMessageAcc"
-        android:enabled="false"
-        android:text="Acceleration"/>
-
-    <Button android:layout_width="wrap_content"
-        android:id="@+id/Aggressive_steering"
-        android:layout_margin="15dp"
-        android:layout_gravity="center"
-        android:layout_height="wrap_content"
-        android:onClick="sendMessageSteer"
-        android:enabled="false"
-        android:text="Aggressive steering"/>
-
-
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="40dp"
+        android:layout_height="40dp">
+
+        <Button android:layout_width="wrap_content"
+            android:layout_margin="1dp"
+            android:id="@+id/Break"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:onClick="sendMessageBrake"
+            android:enabled="false"
+            android:text="Break"/>
+
+        <Button android:layout_width="wrap_content"
+            android:layout_margin="1dp"
+            android:id="@+id/Acceleration"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:onClick="sendMessageAcc"
+            android:enabled="false"
+            android:text="Acceleration"/>
+
+        <Button android:layout_width="wrap_content"
+            android:id="@+id/Aggressive_steering"
+            android:layout_margin="1dp"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:onClick="sendMessageSteer"
+            android:enabled="false"
+            android:text="Aggressive steering"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="4dp"
         android:layout_height="40dp">
 
         <Button android:layout_width="fill_parent"
@@ -93,7 +102,70 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_height="40dp">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="5dp"
+            android:text="hey1"
+            android:id="@+id/display_gps_latitude"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="5dp"
+            android:text="hey2"
+            android:id="@+id/display_gps_longitude"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="5dp"
+            android:text="hey3"
+            android:id="@+id/display_gps_accuracy"
+            />
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_height="40dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="5dp"
+            android:text="hey4"
+            android:id="@+id/display_gps_extra"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:padding="5dp"
+            android:layout_height="match_parent"
+            android:text="hey5"
+            android:id="@+id/display_gps_updated"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="hey5"
+            android:padding="5dp"
+            android:id="@+id/display_gps_status_enabled"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="hey5"
+            android:padding="5dp"
+            android:id="@+id/display_gps_status"
+            />
+    </LinearLayout>
 
 </LinearLayout>
 

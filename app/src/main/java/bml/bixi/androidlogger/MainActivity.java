@@ -1,28 +1,103 @@
 package bml.bixi.androidlogger;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
-    SensorManager mSensorManager ;
+    SensorManager mSensorManager;
     boolean isRunning;
     final String TAG = "SensorLog";
     FileWriter writer;
+
     int samplingSpeed = 0;
+
+
+    LocationListener locationListenerGPS = new LocationListener() {
+        public void onLocationChanged(Location location) {
+            final TextView view_gps_lat = (TextView) findViewById(R.id.display_gps_latitude);
+            final TextView view_gps_lng = (TextView) findViewById(R.id.display_gps_longitude);
+            final TextView view_gps_accuracy = (TextView) findViewById(R.id.display_gps_accuracy);
+            final TextView view_gps_extra = (TextView) findViewById(R.id.display_gps_extra);
+            String lat = String.valueOf(location.getLatitude());
+            String lng = String.valueOf(location.getLongitude());
+            String acc = String.valueOf(location.getAccuracy());
+
+            view_gps_lat.setText("latitude: " + lat);
+            view_gps_lng.setText("longitude: " + lng);
+            view_gps_accuracy.setText("accuracy: " + acc);
+            if (location.getExtras() != null) {
+                Bundle extra = location.getExtras();
+                String estr = "";
+                for (String s : extra.keySet()) {
+                    estr += "  " + s + ": " + extra.get(s).toString() + "\n";
+                }
+                view_gps_extra.setText(estr);
+                
+
+            }
+
+            updatedLastUpdated((TextView) findViewById(R.id.display_gps_updated));
+        }
+
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+            final TextView view_gps = (TextView) findViewById(R.id.display_gps_status);
+            String str = "Status (" + provider + "): ";
+            if (status == LocationProvider.TEMPORARILY_UNAVAILABLE) {
+                str += "temporarily unavailable";
+            } else if (status == LocationProvider.OUT_OF_SERVICE) {
+                str += "out of service";
+            } else if (status == LocationProvider.AVAILABLE) {
+                str += "available";
+            } else {
+                str += "unknown";
+            }
+            view_gps.setText(str);
+
+        }
+
+        public void onProviderEnabled(String provider) {
+            final TextView view_gps = (TextView) findViewById(R.id.display_gps_status_enabled);
+            view_gps.setText(provider + " enabled");
+        }
+
+        public void onProviderDisabled(String provider) {
+            final TextView view_gps = (TextView) findViewById(R.id.display_gps_status_enabled);
+            view_gps.setText(provider + " disabled");
+        }
+    };
+
+
+    protected void updatedLastUpdated(TextView t) {
+        String date = DateFormat.getDateTimeInstance().format(System.currentTimeMillis());
+        t.setText("updated: " + date);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         setContentView(R.layout.activity_main);
 
         isRunning = false;
-        mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
+        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
         final Button buttonStart = findViewById(R.id.button_start);
         final Button buttonStop = findViewById(R.id.button_stop);
@@ -41,6 +116,26 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         final RadioButton slow = findViewById(R.id.slow);
         final RadioButton fast = findViewById(R.id.fast);
         final RadioButton normal = findViewById(R.id.normal);
+
+        LocationManager locationManagerGPS = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        if (locationManagerGPS.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            locationListenerGPS.onProviderEnabled("GPS");
+        } else {
+            locationListenerGPS.onProviderDisabled("GPS");
+        }
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        locationManagerGPS.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListenerGPS);
+
+
         buttonStart.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 buttonStart.setEnabled(false);
@@ -80,6 +175,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     e.printStackTrace();
                 }
                 isRunning = true;
+
             }
         });
 
